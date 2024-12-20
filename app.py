@@ -101,18 +101,30 @@ def odds():
         proj_a = calculate_weighted_projection(team_a)
         proj_b = calculate_weighted_projection(team_b)
 
-        spread = round((proj_a - proj_b) / 2, 1)
-        over_under = round(proj_a + proj_b, 1)
-        moneyline_a, moneyline_b = calculate_moneyline(proj_a, proj_b)
-
-        odds_data.append({
-            "matchup": f"{team_a} vs {team_b}",
-            "spread": f"{team_a} {spread} / {team_b} {-spread}",
-            "over_under": f"Total: {over_under}",
-            "moneyline": f"{team_a}: {moneyline_a} / {team_b}: {moneyline_b}",
-        })
+        # Determine favorite and underdog
+        if proj_a > proj_b:
+            spread = round((proj_a - proj_b) / 2, 1)  # Favorite has negative spread
+            odds_data.append({
+                "team_a": team_a,
+                "team_b": team_b,
+                "spread": f"{-spread:.1f}",  # Negative spread for favorite
+                "over_under": round(proj_a + proj_b, 1),
+                "moneyline_a": calculate_moneyline(proj_a, proj_b)[0],
+                "moneyline_b": calculate_moneyline(proj_a, proj_b)[1],
+            })
+        else:
+            spread = round((proj_b - proj_a) / 2, 1)  # Underdog has positive spread
+            odds_data.append({
+                "team_a": team_a,
+                "team_b": team_b,
+                "spread": f"{spread:.1f}",  # Positive spread for underdog
+                "over_under": round(proj_a + proj_b, 1),
+                "moneyline_a": calculate_moneyline(proj_a, proj_b)[0],
+                "moneyline_b": calculate_moneyline(proj_a, proj_b)[1],
+            })
 
     return jsonify(odds_data)
+
 
 if __name__ == "__main__":
     import os
