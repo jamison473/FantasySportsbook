@@ -105,15 +105,15 @@ def odds():
         moneyline_a, moneyline_b = calculate_moneyline(proj_a, proj_b)
 
         odds_data.append({
-            "team_a": team_a,
-            "team_b": team_b,
-            "spread": spread,
-            "over_under": over_under,
-            "moneyline_a": moneyline_a,
-            "moneyline_b": moneyline_b,
+            "matchup": f"{team_a} vs {team_b}",
+            "spread": f"{team_a} {spread} / {team_b} {-spread}",
+            "over_under": f"Total: {over_under}",
+            "moneyline": f"{team_a}: {moneyline_a} / {team_b}: {moneyline_b}",
         })
 
     return jsonify(odds_data)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    import os
+    port = int(os.environ.get("PORT", 5000))  # Render provides the PORT variable
+    app.run(host="0.0.0.1", port=port)        # Listen on all interfaces
