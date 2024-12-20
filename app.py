@@ -1,4 +1,5 @@
 from flask import Flask, jsonify
+from flask_cors import CORS
 
 # Team stats and projections
 TEAM_STATS = {
